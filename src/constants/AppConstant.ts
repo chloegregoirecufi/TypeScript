@@ -1,1 +1,1 @@
-export const STORAGE_KEY:string = "userinfos";
+export const STORAGE_KEY:string = "userInfos";
