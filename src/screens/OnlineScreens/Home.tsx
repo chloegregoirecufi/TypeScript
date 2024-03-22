@@ -6,25 +6,30 @@ import { selectNoteData } from '../../Redux/note/noteSelector';
 import PageLoader from '../../components/Loader/PageLoader';
 import { BsTrash } from 'react-icons/bs';
 import { deleteNote } from '../../services/noteService';
+import { useAuthContext } from '../../contexts/AuthContext';
+import EmptyNote from '../../components/Divers/EmptyNote';
 
 const Home:React.FC = () => {
   //on recupère le hook useDispatch pour executer le fetchNotes
   const dispatch:AppDispatch = useDispatch();
+  //on recupère user.id depuis le context d'authentification
+  const {userId} = useAuthContext();
 
   useEffect(() => {
-    dispatch(fetchNotes())
+    dispatch(fetchNotes(userId))
   }, [dispatch])
 
   const {loading, notes} = useSelector(selectNoteData);
 
   const handleDelete = async (id:number) => {
     if(await deleteNote(id)){
-      dispatch(fetchNotes())
+      dispatch(fetchNotes(userId))
     }
   }
   
   return (
     loading ? <PageLoader /> :
+    notes.length == 0 ? <EmptyNote/> :
     <div className=' flex flex-col items-center justify-start bg-brown_dark pt-5 '>
       <h1 className='text-white font-bold text-3xl py-3'>Toutes les notes</h1>
       <div className='flex flex-wrap justify-center md:justify-start'>
